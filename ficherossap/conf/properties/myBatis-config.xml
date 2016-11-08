@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<!-- <typeAliases>
+		<typeAlias alias="Contact" type="com.loiane.model.Contact"/>
+	</typeAliases> -->
+	
+	<settings>
+		<!-- <setting name="cacheEnabled" value="true"/>
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="multipleResultSetsEnabled" value="true"/>
+		<setting name="useColumnLabel" value="true"/>
+		<setting name="useGeneratedKeys" value="false"/>
+		<setting name="autoMappingBehavior" value="PARTIAL"/>
+		<setting name="defaultExecutorType" value="SIMPLE"/>
+		<setting name="defaultStatementTimeout" value="25"/>
+		<setting name="safeRowBoundsEnabled" value="false"/>
+		<setting name="mapUnderscoreToCamelCase" value="false"/>
+		<setting name="localCacheScope" value="SESSION"/> -->
+		<!-- <setting name="cacheEnabled" value="false"/> -->
+		<setting name="localCacheScope" value="STATEMENT"/>
+		<setting name="cacheEnabled" value="false"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="callSettersOnNulls" value="false"/>
+		<setting name="logImpl" value="spic.architecture.ProcessLogger"/>
+	</settings>
+
+	<environments default="development">
+		<environment id="development">
+		  <transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+				<property name="username" value="SPICAV74_ENTREGA"/>
+				<property name="password" value="temporal"/>
+			</dataSource>
+	   </environment>
+	</environments>
+
+    <mappers>
+  	   <mapper url="file:////D:/Area/Formacion/Jenkins_Octubre2016/Ejercicios/Eclipse/ficherossap/xml/GenericProcessMapper.xml"/>
+  	   <!-- ESCRITURA FECHA ENTREGA OL -->
+  	   <mapper url="file:////D:/Area/Formacion/Jenkins_Octubre2016/Ejercicios/Eclipse/ficherossap/xml/EscrituraFechaEntregaOLMapper.xml"/>
+  	
+    </mappers>
+</configuration>

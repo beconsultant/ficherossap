@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spic.mappers.EscrituraFechaEntregaOLMapper">
+
+<!-- AND TER_ORD_REPARA.ORD_ENVIO_SSAP = 1 -->
+	<select id="selectElementos" parameterType="hashmap" resultType="hashmap">
+		select ORD_NUM, NUM_PEDIDO, COD_FAB, ORD_ORDEN
+		FROM (
+		SELECT
+			TER_ORD_REPARA_TERM.ORD_NUM AS ORD_NUM,
+			TER_ORD_REPARA_TERM.ORD_ORDEN AS ORD_ORDEN,
+			TER_ORD_REPARA.ORD_NUM_PED AS NUM_PEDIDO,
+		  	TER_ELEMENTOS.ELE_COD_FAB as COD_FAB
+		FROM TER_ORD_REPARA,
+      		TER_ORD_REPARA_TERM, TER_ELEMENTOS
+		WHERE TER_ORD_REPARA.ord_num = TER_ORD_REPARA_TERM.ord_num
+			AND TER_ELEMENTOS.EQP_COD = TER_ORD_REPARA_TERM.EQP_COD AND TER_ELEMENTOS.ELE_COD = TER_ORD_REPARA_TERM.ELE_COD_AVR
+    		AND TER_ORD_REPARA.EST_COD = 2
+    		AND TER_ELEMENTOS.ELE_COD_FAB NOT IN 
+				(SELECT TER_ELEM_EXCLUIDOS_SSAP.COD_FAB FROM TER_ELEM_EXCLUIDOS_SSAP) 
+    	<if test="fechaInicio != null and fechaInicio !=''">              
+			AND ter_ord_repara.ORD_FEC_AV_OL &#62;= TO_DATE(#{fechaInicio}, 'dd/MM/YYYY HH24:MI:ss')
+        </if>
+        <if test="fechaFin != null and fechaFin != ''">              
+			AND ter_ord_repara.ORD_FEC_AV_OL &#60;= TO_DATE(#{fechaFin}, 'dd/MM/YYYY HH24:MI:ss')
+        </if>   
+        <if test="(fechaInicio == null or fechaInicio =='') and (fechaFin == null or fechaFin =='')">
+        	<if test="numDias != null and numDias !=''">
+        		AND ter_ord_repara.ORD_FEC_AV_OL &#60;= SYSDATE - #{numDias}
+        	</if>
+        	<if test="numDias == null or numDias ==''">
+        		AND ter_ord_repara.ORD_FEC_AV_OL &#60;= SYSDATE
+        	</if>
+        </if>
+        ORDER BY TER_ORD_REPARA_TERM.ORD_NUM
+        )
+	</select>
+	<select id="obtenerSeqTerInterSSAP" parameterType="hashmap" resultType="java.math.BigDecimal">
+		SELECT SEQ_INTER_SSAP FROM TER_INTER_SSAP 
+		WHERE UPPER(NUM_PED_SAP)=UPPER(#{numPedido}) AND  ORD_NUM=#{ordNum} AND  ORD_ORDEN=#{ordOrden} AND UPPER(COD_FAB)=UPPER(#{codFab}) AND COD_TIPO_INTERCAMBIO=2
+		AND FEC_PROCESADO is null
+		AND ERROR_PROCESADO = 0
+	</select>
+	<insert id="insertTerInterSSAP" parameterType="hashmap">
+		INSERT INTO 
+			TER_INTER_SSAP (SEQ_INTER_SSAP, COD_TIPO_INTERCAMBIO, NUM_PED_SAP, ORD_NUM, ORD_ORDEN, COD_FAB, COD_ESTADO, FEC_ENVIO) 
+			VALUES	(SEQ_INTER_SSAP.NEXTVAL, 2, UPPER(#{numPedido}), #{ordNum}, #{ordOrden}, UPPER(#{codFab}), 0, SYSDATE)
+	</insert>
+	<update id="updateFecTerInterSSAP" parameterType="java.math.BigDecimal">
+		UPDATE TER_INTER_SSAP SET FEC_ENVIO = SYSDATE WHERE SEQ_INTER_SSAP=#{value}
+	</update>
+<!-- 	<update id="marcarSolicitudesComoEnviadas" parameterType="hashmap"> -->
+<!-- 		UPDATE TER_ORD_REPARA SET ORD_ENVIO_SSAP = 1 WHERE ORD_NUM=#{ordNum} -->
+<!-- 	</update> -->
+</mapper>
