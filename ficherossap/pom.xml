@@ -47,14 +47,7 @@
     		<systemPath>D:/Area/Formacion/Jenkins_Octubre2016/Ejercicios/Eclipse/ficherossap/lib/log4j-1.2.5.jar</systemPath>
 		</dependency>
 
-		<dependency>
-    		<groupId>org.apache.camel</groupId>
-    		<artifactId>camel-ibatis</artifactId>
-    		<version>2.0.0</version>
-    		<scope>system</scope>
-    		<systemPath>D:/Area/Formacion/Jenkins_Octubre2016/Ejercicios/Eclipse/ficherossap/lib/ibatis-common-2.jar</systemPath>
-		</dependency>
-		
+	
 		<dependency>
  			<groupId>com.oracle.jdbc</groupId>
  			<artifactId>ojdbc7</artifactId>
